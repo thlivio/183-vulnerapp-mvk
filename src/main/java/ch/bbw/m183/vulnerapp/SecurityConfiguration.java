@@ -1,6 +1,7 @@
 package ch.bbw.m183.vulnerapp;
 
 import ch.bbw.m183.vulnerapp.repository.UserRepository;
+import ch.bbw.m183.vulnerapp.service.RestfulFormService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -34,10 +35,16 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-        return http.httpBasic(Customizer.withDefaults())
+    public SecurityFilterChain filterChain(
+            HttpSecurity http, RestfulFormService restfulFormService) {
+        return http.formLogin(restfulFormService.restfulFormLogin())
+                .exceptionHandling(restfulFormService.unauthorizedPerDefault())
+                .csrf(x -> x.disable())
                 .authorizeHttpRequests(auth ->
-                        auth.anyRequest().authenticated())
+                        auth.requestMatchers("/api/**")
+                                .authenticated()
+                                .anyRequest()
+                                .permitAll())
                 .build();
     }
 

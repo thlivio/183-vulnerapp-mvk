@@ -16,7 +16,7 @@ function onLoginSubmit(event) {
   const username = event.target[0].value;
   const password = event.target[1].value;
   event.preventDefault();
-  fetch("/api/user/fakelogin", {
+  fetch("/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
