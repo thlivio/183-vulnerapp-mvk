@@ -1,8 +1,9 @@
 package ch.bbw.m183.vulnerapp.controller;
 
-import java.util.Base64;
+import java.security.Principal;
 
 import ch.bbw.m183.vulnerapp.datamodel.UserEntity;
+import ch.bbw.m183.vulnerapp.repository.UserRepository;
 import ch.bbw.m183.vulnerapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@GetMapping("/whoami")
-	public UserEntity whoami(@RequestHeader("Authorization") String basicAuth) {
-		var usernamePassword = new String(Base64.getDecoder().decode(basicAuth.substring("Basic ".length())));
-		var arr = usernamePassword.split(":", 2);
-		return userService.whoami(arr[0], arr[1]);
+	public UserEntity whoami(Principal principal) {
+		// Return current authenticated user from session/principal
+		return userRepository.findById(principal.getName()).orElseThrow();
 	}
 
 	@PostMapping("/fakelogin")

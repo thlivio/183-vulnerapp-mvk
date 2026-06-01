@@ -16,41 +16,67 @@ function onLoginSubmit(event) {
   const username = event.target[0].value;
   const password = event.target[1].value;
   event.preventDefault();
-  fetch("/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({username, password}),
+  // fetch CSRF token (server exposes /api/csrf) then perform login
+  getCsrfToken().then(token => {
+    return fetch("/login", {
+      method: "POST",
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        [token.headerName]: token.token
+      },
+      body: new URLSearchParams({username, password}),
+    });
   })
-      .then(filterOk)
-      .then(response => response.json())
-      .then(user => window.sessionStorage.setItem("fullname", user.fullname))
-      .then(() => loginCheck());
+  .then(filterOk)
+  .then(response => response.json())
+  .then(user => window.sessionStorage.setItem("fullname", user.fullname))
+  .then(() => loginCheck());
 }
 
 function onLogoutSubmit(event) {
   event.preventDefault();
-  window.sessionStorage.removeItem("fullname");
-  loginCheck();
+  getCsrfToken().then(token => fetch('/api/logout', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { [token.headerName]: token.token }
+  })).finally(() => {
+    window.sessionStorage.removeItem("fullname");
+    loginCheck();
+  });
 }
 
 function onBlogSubmit(event) {
   const data = {"title": event.target[0].value, "body": event.target[1].value};
   event.preventDefault();
-  fetch("/api/blog", {
+  getCsrfToken().then(token => fetch("/api/blog", {
     method: "POST",
+    credentials: 'include',
     headers: {
       "Content-Type": "application/json",
+      [token.headerName]: token.token
     },
     body: JSON.stringify(data),
-  })
+  }))
       .then(filterOk)
       .then(() => fetchBlogs())
       .then(() => event.target.reset());
 }
 
-// switch display based on login status
+function getCookie(name) {
+  const matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function getCsrfToken(){
+  return fetch('/api/csrf', {credentials: 'include'})
+    .then(filterOk)
+    .then(res => res.json())
+    .then(body => ({ headerName: body.headerName, token: body.token }));
+}
+
 function loginCheck() {
   const fullname = window.sessionStorage.getItem("fullname") || "anonymous";
   let authentic = fullname !== "anonymous";

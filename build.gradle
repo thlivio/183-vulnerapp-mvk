@@ -21,13 +21,17 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
 	runtimeOnly 'com.h2database:h2'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework:spring-test'
 	testRuntimeOnly 'com.h2database:h2'
 }
 

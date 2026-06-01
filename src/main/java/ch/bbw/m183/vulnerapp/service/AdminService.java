@@ -4,6 +4,7 @@ import java.util.stream.Stream;
 
 import ch.bbw.m183.vulnerapp.datamodel.UserEntity;
 import ch.bbw.m183.vulnerapp.repository.UserRepository;
+import ch.bbw.m183.vulnerapp.security.PasswordHashingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminService {
 
+	private final PasswordHashingService passwordHashingService;
 	private final UserRepository userRepository;
 
 	public UserEntity createUser(UserEntity newUser) {
@@ -33,8 +35,8 @@ public class AdminService {
 
 	@EventListener(ContextRefreshedEvent.class)
 	public void loadTestUsers() {
-		Stream.of(new UserEntity().setUsername("admin").setFullname("Super Admin").setPassword("{noop}super5ecret"),
-						new UserEntity().setUsername("fuu").setFullname("Johanna Doe").setPassword("{noop}bar"))
+		Stream.of(new UserEntity().setUsername("admin").setFullname("Super Admin").setPassword(passwordHashingService.hashPassword("Admin@12345")).setRole("ROLE_ADMIN"),
+						new UserEntity().setUsername("fuu").setFullname("Johanna Doe").setPassword(passwordHashingService.hashPassword("Fuu!12345")).setRole("ROLE_USER"))
 				.forEach(this::createUser);
 	}
 }

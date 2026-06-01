@@ -24,4 +24,7 @@ public class UserEntity {
 	@Column
 	String password;
 
+	@Column
+	String role = "ROLE_USER";
+
 }
