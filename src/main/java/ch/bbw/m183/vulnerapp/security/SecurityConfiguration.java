@@ -1,10 +1,9 @@
-package ch.bbw.m183.vulnerapp;
+package ch.bbw.m183.vulnerapp.security;
 
 import ch.bbw.m183.vulnerapp.repository.UserRepository;
 import ch.bbw.m183.vulnerapp.service.RestfulFormService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +16,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ch.bbw.m183.vulnerapp.security.JsonUsernamePasswordAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.List;
 import java.util.Collections;
 
 @Configuration

@@ -12,10 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Authentication filter that accepts JSON body {"username":"...","password":"..."}
- * and delegates to the AuthenticationManager (so sessions are handled by Spring Security).
- */
+
 public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final ObjectMapper objectMapper;

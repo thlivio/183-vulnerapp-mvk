@@ -6,25 +6,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Service to validate passwords against security rules.
- * Rules:
- * - minimum 8 characters
- * - at least one uppercase letter
- * - at least one lowercase letter
- * - at least one digit
- * - at least one special character (!@#$%^&*)
- */
+
 @Service
 public class PasswordValidator {
 
     public static final int MIN_LENGTH = 8;
     public static final String SPECIAL_CHARS = "!@#$%^&*";
 
-    /**
-     * Validate a password and return all validation errors.
-     * Returns empty list if valid.
-     */
+
     public List<String> validate(String password) {
         List<String> errors = new ArrayList<>();
 
